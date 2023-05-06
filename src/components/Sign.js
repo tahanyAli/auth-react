@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import base64 from "base-64";
-import { When } from "react-if";
+import cookies from 'react-cookies';
 
-function Sign() {
-  const [loggedin, setLoggedin] = useState(false);
+function Sign({ setLoggedin }) {
   const handleSignup = (e) => {
     e.preventDefault();
     const data = {
@@ -13,7 +12,7 @@ function Sign() {
       password: e.target.password.value,
     };
 
-     axios
+    axios
       .post("http://localhost:3002/signup", data)
       .then((res) => {
         console.log(res);
@@ -40,35 +39,32 @@ function Sign() {
         }
       )
       .then((res) => {
-        console.log(res.data);
+        cookies.save('token', res.data.token)
+        cookies.save('userID', res.data.id)
+        cookies.save('userName', res.data.userName)
         setLoggedin(true);
       })
       .catch((e) => console.log(e));
   };
   return (
     <>
-      <When condition={!loggedin}>
-        <div>
-          <h2>Sign Up</h2>
-          <form action="" onSubmit={handleSignup}>
-            <input type="text" placeholder="username" name="username" />
-            <input type="email" placeholder="email" name="email" />
-            <input type="text" placeholder="password" name="password" />
-            <button type="submit">Save</button>
-          </form>
-        </div>
-        <div>
-          <h2>Sign in</h2>
-          <form action="" onSubmit={handleLogin}>
-            <input type="email" placeholder="email" name="email" />
-            <input type="text" placeholder="password" name="password" />
-            <button type="submit">Login</button>
-          </form>
-        </div>
-      </When>
-      <When condition={loggedin}>
-        <h1>Hello I am Authorized</h1>
-      </When>
+      <div>
+        <h2>Sign Up</h2>
+        <form action="" onSubmit={handleSignup}>
+          <input type="text" placeholder="username" name="username" />
+          <input type="email" placeholder="email" name="email" />
+          <input type="text" placeholder="password" name="password" />
+          <button type="submit">Save</button>
+        </form>
+      </div>
+      <div>
+        <h2>Sign in</h2>
+        <form action="" onSubmit={handleLogin}>
+          <input type="email" placeholder="email" name="email" />
+          <input type="text" placeholder="password" name="password" />
+          <button type="submit">Login</button>
+        </form>
+      </div>
     </>
   );
 }
