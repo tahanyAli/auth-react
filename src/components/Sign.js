@@ -42,6 +42,8 @@ function Sign({ setLoggedin }) {
         cookies.save('token', res.data.token)
         cookies.save('userID', res.data.id)
         cookies.save('userName', res.data.userName)
+        cookies.save('role', res.data.role)
+        // cookies.save('capabilities',JSON.parse(res.data.capabilities))
         setLoggedin(true);
       })
       .catch((e) => console.log(e));
